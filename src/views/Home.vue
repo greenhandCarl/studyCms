@@ -65,17 +65,19 @@ export default class Home extends Vue {
   form = {}
   subjectList = []
 
-  onSubmit () {
-    const data = {
-      subjectList: this.subjectList,
-      teacher: this.form
-    }
+  async onSubmit () {
+    const data = { subjectList: this.subjectList, teacher: this.form }
     console.log('this.form', this.form)
-    axios({
+    const res: any = await axios({
       method: 'post',
       url: 'http://120.26.77.52:8080/subject_teacher',
       data: JSON.stringify(data)
     })
+    if (res.data.code === 0 && res.data.msg === '成功') {
+      this.$message('提交成功')
+      this.form = {}
+      this.subjectList = []
+    }
   }
 }
 </script>
