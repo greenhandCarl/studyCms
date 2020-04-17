@@ -5,6 +5,13 @@
         <el-form-item label="老师名字">
           <el-input v-model="form.name"></el-input>
         </el-form-item>
+        <el-form-item label="科目">
+          <el-checkbox-group v-model="subjectList">
+            <el-checkbox label="subject001" name="type">语文</el-checkbox>
+            <el-checkbox label="subject002" name="type">数学</el-checkbox>
+            <el-checkbox label="subject003" name="type">英语</el-checkbox>
+          </el-checkbox-group>
+        </el-form-item>
         <el-form-item label="头像">
           <el-input v-model="form.avatar"></el-input>
         </el-form-item>
@@ -56,13 +63,18 @@ import axios from 'axios'
 @Component
 export default class Home extends Vue {
   form = {}
+  subjectList = []
 
   onSubmit () {
+    const data = {
+      subjectList: this.subjectList,
+      teacher: this.form
+    }
     console.log('this.form', this.form)
     axios({
       method: 'post',
       url: 'http://120.26.77.52:8080/subject_teacher',
-      data: JSON.stringify(this.form)
+      data: JSON.stringify(data)
     })
   }
 }
