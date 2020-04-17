@@ -62,7 +62,7 @@ export default class Home extends Vue {
     axios({
       method: 'post',
       url: 'http://120.26.77.52:8080/subject_teacher',
-      data: this.form
+      data: JSON.stringify(this.form)
     })
   }
 }
