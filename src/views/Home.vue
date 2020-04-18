@@ -34,7 +34,7 @@
           <el-input v-model="form.expert"></el-input>
         </el-form-item>
         <el-form-item label="年限">
-          <el-input v-model="form.years"></el-input>
+          <el-input v-model="form.years" type='number'></el-input>
         </el-form-item>
         <el-form-item label="是否是教师">
           <el-radio-group v-model="form.isTeacher">
