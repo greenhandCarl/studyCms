@@ -71,7 +71,7 @@ export default class Home extends Vue {
     const res: any = await axios({
       method: 'post',
       url: 'http://120.26.77.52:8080/subject_teacher',
-      data: JSON.stringify(data)
+      data: data
     })
     if (res.data.code === 0 && res.data.msg === '成功') {
       this.$message('提交成功')
