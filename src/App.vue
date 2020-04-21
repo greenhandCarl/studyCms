@@ -1,15 +1,15 @@
 <template>
   <div id="app">
-    <Home />
+    <router-view></router-view>
   </div>
 </template>
 
 <script lang='ts'>
 import { Component, Vue } from 'vue-property-decorator'
-import Home from './views/Home.vue'
+import TeacherList from './views/TeacherList.vue'
 
 @Component({
-  components: { Home }
+  components: { TeacherList }
 })
 export default class App extends Vue {
   data = {}

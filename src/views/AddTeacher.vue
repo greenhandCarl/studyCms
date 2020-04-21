@@ -50,6 +50,7 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSubmit">提交</el-button>
+          <el-button type="default" @click="onBack">返回教师列表</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -58,26 +59,26 @@
 
 <script lang='ts'>
 import { Component, Vue } from 'vue-property-decorator'
-import axios from 'axios'
+import { request } from '@/api/index'
 
 @Component
-export default class Home extends Vue {
+export default class AddTeacher extends Vue {
   form = {}
   subjectList = []
 
   async onSubmit () {
     const data = { subjectList: this.subjectList, teacher: this.form }
     console.log('this.form', this.form)
-    const res: any = await axios({
-      method: 'post',
-      url: 'http://120.26.77.52:8080/subject_teacher',
-      data: data
-    })
-    if (res.data.code === 0 && res.data.msg === '成功') {
+    const res = await request({ method: 'post', url: '/subject_teacher', data }) as { data: any }
+    if (res.data && res.data.code === 0 && res.data.msg === '成功') {
       this.$message('提交成功')
       this.form = {}
       this.subjectList = []
     }
+  }
+
+  onBack () {
+    this.$router.push('/')
   }
 }
 </script>
