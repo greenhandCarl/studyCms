@@ -5,6 +5,12 @@
         <el-form-item label="老师名字">
           <el-input v-model="form.name"></el-input>
         </el-form-item>
+        <el-form-item label="性别">
+          <el-radio-group v-model="form.gender">
+            <el-radio label="0">男</el-radio>
+            <el-radio label="1">女</el-radio>
+          </el-radio-group>
+        </el-form-item>
         <el-form-item label="科目">
           <el-checkbox-group v-model="subjectList">
             <el-checkbox label="subject001" name="type">语文</el-checkbox>
@@ -19,7 +25,7 @@
           <el-input v-model="form.video"></el-input>
         </el-form-item>
         <el-form-item label="文字介绍">
-          <el-input v-model="form.introduct"></el-input>
+          <el-input v-model="form.introduce"></el-input>
         </el-form-item>
         <el-form-item label="学历">
           <el-input v-model="form.education"></el-input>

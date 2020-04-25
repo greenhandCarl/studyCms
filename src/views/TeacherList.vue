@@ -33,7 +33,7 @@
         width="100">
         <template slot-scope="scope">
           <el-button @click="onForbidden(scope.row)" type="text" size="small">{{scope.row.disable === 0 ? '禁用' : '启动'}}</el-button>
-          <el-button type="text" size="small">编辑</el-button>
+          <el-button @click='goUpdateTeacher' type="text" size="small">编辑</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -72,6 +72,7 @@ export default class TeacherList extends Vue {
   async initTeacherList () {
     const res = await request({ method: 'get', url: `/teacher/teachers?currentPage=${this.currentPage}&pageSize=${this.pageSize}`, data: {} }) as { data: any }
     const data = res.data
+    data.data.dataList.forEach((item: any) => { item.gender === 0 ? item.gender = '男' : item.gender = '女' })
     this.tableData = data.data.dataList
     this.totalPage = data.data.totalPage
     this.maxTotal = this.totalPage * this.pageSize
@@ -90,6 +91,10 @@ export default class TeacherList extends Vue {
 
   goAddTeacher () {
     this.$router.push('/addTeacher')
+  }
+
+  goUpdateTeacher () {
+    this.$router.push('/updateTeacher')
   }
 }
 </script>
