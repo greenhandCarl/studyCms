@@ -33,7 +33,7 @@
         width="100">
         <template slot-scope="scope">
           <el-button @click="onForbidden(scope.row)" type="text" size="small">{{scope.row.disable === 0 ? '禁用' : '启动'}}</el-button>
-          <el-button @click='goUpdateTeacher' type="text" size="small">编辑</el-button>
+          <el-button @click='goUpdateTeacher(scope.row)' type="text" size="small">编辑</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -93,8 +93,9 @@ export default class TeacherList extends Vue {
     this.$router.push('/addTeacher')
   }
 
-  goUpdateTeacher () {
-    this.$router.push('/updateTeacher')
+  goUpdateTeacher (row: any) {
+    this.$store.commit('setTeacher', { row })
+    this.$router.push(`/updateTeacher?teacherId=${row.id}`)
   }
 }
 </script>

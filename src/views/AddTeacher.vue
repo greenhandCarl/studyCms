@@ -11,6 +11,9 @@
             <el-radio label="1">女</el-radio>
           </el-radio-group>
         </el-form-item>
+        <el-form-item label="年龄">
+          <el-input v-model="form.age" type='number'></el-input>
+        </el-form-item>
         <el-form-item label="科目">
           <el-checkbox-group v-model="subjectList">
             <el-checkbox label="subject001" name="type">语文</el-checkbox>
@@ -19,7 +22,16 @@
           </el-checkbox-group>
         </el-form-item>
         <el-form-item label="头像">
-          <el-input v-model="form.avatar"></el-input>
+          <el-upload
+            class="upload"
+            action=""
+            :auto-upload='false'
+            :on-change="onAvatarFileChange"
+            :file-list="fileList"
+          >
+            <el-button size="small" type="primary">点击上传</el-button>
+            <div slot="tip" class="el-upload__tip">（只能上传jpg/png文件）</div>
+          </el-upload>
         </el-form-item>
         <el-form-item label="视频介绍">
           <el-input v-model="form.video"></el-input>
@@ -110,10 +122,11 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { request } from '@/api/index'
 import { v4 } from 'uuid'
+import axios from 'axios'
 
 @Component
 export default class AddTeacher extends Vue {
-  form = {}
+  form: any = {} // eslint-disable-line
   subjectList = []
   weeks = [
     { label: '星期一', value: '1' },
@@ -129,7 +142,19 @@ export default class AddTeacher extends Vue {
     { id: v4(), weekDay: '', startTime: '', endTime: '' }
   ]
 
+  // 头像列表
+  fileList: any = [] // eslint-disable-line
+
   weekDay = ''
+
+  onSelectFile () {
+    console.log('onSelectFile')
+  }
+
+  onAvatarFileChange (file: any, fileList: any) { // eslint-disable-line
+    this.fileList = [file.raw]
+    this.uploadAli(file.raw)
+  }
 
   async onSubmit () {
     const data = { subjectList: this.subjectList, teacher: this.form, teacherFreeTimeList: this.freeTimeList }
@@ -142,6 +167,23 @@ export default class AddTeacher extends Vue {
         { id: v4(), weekDay: '', startTime: '', endTime: '' }
       ]
     }
+  }
+
+  async uploadAli (file: any) { // eslint-disable-line
+    console.log('file', file)
+    const res = await request({ method: 'get', url: '/oss/sign', data: null }) as { data: any }
+    console.log('res', res)
+    const formData = new FormData()
+    formData.append('name', file.name)
+    formData.append('key', 'shangkeya/${filename}') // eslint-disable-line
+    formData.append('policy', res.data.data.policy)
+    formData.append('OSSAccessKeyId', res.data.data.accessid)
+    formData.append('success_action_status', '200')
+    formData.append('signature', res.data.data.signature)
+    formData.append('file', file)
+
+    await axios({ method: 'post', url: 'https://20200508sky.oss-cn-shenzhen.aliyuncs.com', data: formData })
+    this.form.avatar = `https://20200508sky.oss-cn-shenzhen.aliyuncs.com/shangkeya/${file.name}`
   }
 
   addTreeTime () {
@@ -168,6 +210,14 @@ export default class AddTeacher extends Vue {
   justify-content: center;
   .form-container {
     width: 50%;
+    .upload {
+      display: flex;
+      justify-content: flex-start;
+      .el-upload__tip {
+        margin-top: 0;
+        padding-left: 20px;
+      }
+    }
   }
   .teacherFreeTimeList {
     padding-bottom: 20px;
