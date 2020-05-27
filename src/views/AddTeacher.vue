@@ -19,6 +19,12 @@
             <el-checkbox label="subject001" name="type">语文</el-checkbox>
             <el-checkbox label="subject002" name="type">数学</el-checkbox>
             <el-checkbox label="subject003" name="type">英语</el-checkbox>
+            <el-checkbox label="subject004" name="type">政治</el-checkbox>
+            <el-checkbox label="subject005" name="type">历史</el-checkbox>
+            <el-checkbox label="subject006" name="type">地理</el-checkbox>
+            <el-checkbox label="subject007" name="type">物理</el-checkbox>
+            <el-checkbox label="subject008" name="type">化学</el-checkbox>
+            <el-checkbox label="subject009" name="type">生物</el-checkbox>
           </el-checkbox-group>
         </el-form-item>
         <el-form-item label="头像">

@@ -6,17 +6,35 @@
           <el-input v-model="form.name"></el-input>
         </el-form-item>
         <el-form-item label="性别">
-          <el-input v-model="form.gender"></el-input>
+          <el-radio-group v-model="form.gender">
+            <el-radio label="0">男</el-radio>
+            <el-radio label="1">女</el-radio>
+          </el-radio-group>
         </el-form-item>
         <el-form-item label="科目">
           <el-checkbox-group v-model="subjectList">
             <el-checkbox label="subject001" name="type">语文</el-checkbox>
             <el-checkbox label="subject002" name="type">数学</el-checkbox>
             <el-checkbox label="subject003" name="type">英语</el-checkbox>
+            <el-checkbox label="subject004" name="type">政治</el-checkbox>
+            <el-checkbox label="subject005" name="type">历史</el-checkbox>
+            <el-checkbox label="subject006" name="type">地理</el-checkbox>
+            <el-checkbox label="subject007" name="type">物理</el-checkbox>
+            <el-checkbox label="subject008" name="type">化学</el-checkbox>
+            <el-checkbox label="subject009" name="type">生物</el-checkbox>
           </el-checkbox-group>
         </el-form-item>
         <el-form-item label="头像">
-          <el-input v-model="form.avatar"></el-input>
+          <el-upload
+            class="upload"
+            action=""
+            :auto-upload='false'
+            :on-change="onAvatarFileChange"
+            :file-list="fileList"
+          >
+            <el-button size="small" type="primary">点击上传</el-button>
+            <div slot="tip" class="el-upload__tip">（只能上传jpg/png文件）</div>
+          </el-upload>
         </el-form-item>
         <el-form-item label="视频介绍">
           <el-input v-model="form.video"></el-input>
@@ -108,11 +126,13 @@ import { Component, Vue } from 'vue-property-decorator'
 import { request } from '@/api/index'
 import { v4 } from 'uuid'
 import _ from 'lodash'
+import axios from 'axios'
 
 @Component
 export default class AddTeacher extends Vue {
-  form = {}
+  form: any = {} // eslint-disable-line
   subjectList = []
+  subjectItemList = []
   weeks = [
     { label: '星期一', value: '1' },
     { label: '星期二', value: '2' },
@@ -127,10 +147,35 @@ export default class AddTeacher extends Vue {
     { id: v4(), weekDay: '', startTime: '', endTime: '' }
   ]
 
+  // 头像列表
+  fileList: any = [] // eslint-disable-line
+
   weekDay = ''
 
   mounted () {
     this.initTeacher()
+  }
+
+  onAvatarFileChange (file: any, fileList: any) { // eslint-disable-line
+    this.fileList = [file.raw]
+    this.uploadAli(file.raw)
+  }
+
+  async uploadAli (file: any) { // eslint-disable-line
+    console.log('file', file)
+    const res = await request({ method: 'get', url: '/oss/sign', data: null }) as { data: any }
+    console.log('res', res)
+    const formData = new FormData()
+    formData.append('name', file.name)
+    formData.append('key', 'shangkeya/${filename}') // eslint-disable-line
+    formData.append('policy', res.data.data.policy)
+    formData.append('OSSAccessKeyId', res.data.data.accessid)
+    formData.append('success_action_status', '200')
+    formData.append('signature', res.data.data.signature)
+    formData.append('file', file)
+
+    await axios({ method: 'post', url: 'https://20200508sky.oss-cn-shenzhen.aliyuncs.com', data: formData })
+    this.form.avatar = `https://20200508sky.oss-cn-shenzhen.aliyuncs.com/shangkeya/${file.name}`
   }
 
   async initTeacher () {
@@ -138,21 +183,27 @@ export default class AddTeacher extends Vue {
     const currentTeacher = res.data.data
     currentTeacher.liveTeachingStatus = String(currentTeacher.liveTeachingStatus)
     currentTeacher.isTeacher = String(currentTeacher.isTeacher)
+    const fileName = (currentTeacher.avatar && currentTeacher.avatar.split('/').slice(-1)[0]) || '暂无头像'
+    this.fileList = [{ name: fileName }]
     this.form = currentTeacher
+    // 性别
+    this.form.gender = String(this.form.gender)
+    // 科目
     this.subjectList = currentTeacher.subjectItemList.map((item: any) => item.subjectCode) // eslint-disable-line
+    // 空闲时间
+    this.freeTimeList = JSON.parse(currentTeacher.ext).map((item: any) => ({ ...item, id: v4(), weekDay: String(item.weekDay) })) // eslint-disable-line
+
     console.log('this.form', this.form)
   }
 
   async onSubmit () {
     const data = { subjectList: this.subjectList, teacher: this.form, teacherFreeTimeList: this.freeTimeList }
-    const res = await request({ method: 'post', url: '/subject_teacher', data }) as { data: any }
+    console.log('data', data)
+    const res = await request({ method: 'put', url: `/teacher/${this.$route.query.teacherId}`, data }) as { data: any } // eslint-disable-line
     if (res.data && res.data.code === 0 && res.data.msg === '成功') {
-      this.$message('提交成功')
-      this.form = {}
-      this.subjectList = []
-      this.freeTimeList = [
-        { id: v4(), weekDay: '', startTime: '', endTime: '' }
-      ]
+      this.$alert('修改成功', '修改老师', {
+        confirmButtonText: '确定'
+      })
     }
   }
 
@@ -180,6 +231,14 @@ export default class AddTeacher extends Vue {
   justify-content: center;
   .form-container {
     width: 50%;
+    .upload {
+      display: flex;
+      justify-content: flex-start;
+      .el-upload__tip {
+        margin-top: 0;
+        padding-left: 20px;
+      }
+    }
   }
   .teacherFreeTimeList {
     padding-bottom: 20px;
