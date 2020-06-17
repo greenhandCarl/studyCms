@@ -1,6 +1,7 @@
 import axios from 'axios'
 
-const host = 'http://120.26.77.52:8080'
+// const host = 'http://120.26.77.52:8080'
+const host = 'https://shankkeya.net/api'
 
 interface RequestParams {
   method: 'get' | 'GET' | 'delete' | 'DELETE' | 'head' | 'HEAD' | 'options' | 'OPTIONS' | 'post' | 'POST' | 'put' | 'PUT' | 'patch' | 'PATCH' | 'link' | 'LINK' | 'unlink' | 'UNLINK' | undefined;
