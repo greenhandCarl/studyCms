@@ -8,9 +8,9 @@ interface RequestParams {
   url: string;
   data: any; // eslint-disable-line
 }
-
 export const request = ({ method, url, data }: RequestParams) => {
+  console.log("localStorage.getItem('token')", localStorage.getItem('token'))
   return new Promise((resolve, reject) => {
-    axios({ method, url: `${host}${url}`, headers: { Authorization: localStorage.getItem('token') }, data }).then((res) => { resolve(res) }).catch((err) => { reject(err) })
+    axios({ method, url: `${host}${url}`, headers: { Authorization: localStorage.getItem('token') || '' }, data }).then((res) => { resolve(res) }).catch((err) => { reject(err) })
   })
 }
