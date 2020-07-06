@@ -6,11 +6,11 @@ const host = 'https://www.shankkeya.net/api'
 interface RequestParams {
   method: 'get' | 'GET' | 'delete' | 'DELETE' | 'head' | 'HEAD' | 'options' | 'OPTIONS' | 'post' | 'POST' | 'put' | 'PUT' | 'patch' | 'PATCH' | 'link' | 'LINK' | 'unlink' | 'UNLINK' | undefined;
   url: string;
-  data: any;
+  data: any; // eslint-disable-line
 }
 
 export const request = ({ method, url, data }: RequestParams) => {
   return new Promise((resolve, reject) => {
-    axios({ method, url: `${host}${url}`, data }).then((res) => { resolve(res) }).catch((err) => { reject(err) })
+    axios({ method, url: `${host}${url}`, headers: { Authorization: localStorage.getItem('token') }, data }).then((res) => { resolve(res) }).catch((err) => { reject(err) })
   })
 }

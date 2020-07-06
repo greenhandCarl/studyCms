@@ -3,12 +3,18 @@ import VueRouter, { RouteConfig } from 'vue-router'
 import TeacherList from '../views/TeacherList.vue'
 import AddTeacher from '../views/AddTeacher.vue'
 import UpdateTeacher from '../views/UpdateTeacher.vue'
+import LoginPage from '../views/LoginPage.vue'
 
 Vue.use(VueRouter)
 
 const routes: Array<RouteConfig> = [
   {
     path: '/',
+    name: 'login',
+    component: LoginPage
+  },
+  {
+    path: '/teacherList',
     name: 'TeacherList',
     component: TeacherList
   },
