@@ -12,7 +12,7 @@
     "@types/lodash": "^4.14.150",
     "@types/uuid": "^7.0.3",
     "ali-oss": "^6.7.0",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "core-js": "^3.6.4",
     "element-ui": "^2.13.1",
     "lodash": "^4.17.15",
